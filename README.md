@@ -1,18 +1,18 @@
-# 🛍️ ShopMERN
+# ShopMERN
 
 A full-stack e-commerce web application built with the **MERN stack** (MongoDB, Express, React, Node.js). Features user authentication, a product catalog, a shopping cart, and a mock Stripe-style checkout flow.
 
-## ✨ Features
+##  Features
 
-- 🔐 **JWT authentication** (signup, login, protected routes)
-- 🛒 **Shopping cart** with localStorage persistence
-- 📦 **Product catalog** with category filtering and detail pages
-- 💳 **Mock payment flow** that simulates Stripe-style card validation (no Stripe account needed)
-- 📋 **Order history** with order detail pages
-- 🗄️ **Dual database mode**: works with MongoDB (Atlas or local) OR a built-in in-memory store for zero-setup demos
-- 📱 **Responsive design** with a clean, warm aesthetic
+-  **JWT authentication** (signup, login, protected routes)
+-  **Shopping cart** with localStorage persistence
+-  **Product catalog** with category filtering and detail pages
+-  **Mock payment flow** that simulates Stripe-style card validation (no Stripe account needed)
+-  **Order history** with order detail pages
+-  **Dual database mode**: works with MongoDB (Atlas or local) OR a built-in in-memory store for zero-setup demos
+-  **Responsive design** with a clean, warm aesthetic
 
-## 🏗️ Tech Stack
+##  Tech Stack
 
 **Backend**
 - Node.js + Express (REST API)
@@ -27,7 +27,7 @@ A full-stack e-commerce web application built with the **MERN stack** (MongoDB, 
 - Axios for API calls
 - Context API for auth and cart state
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm
@@ -126,7 +126,7 @@ mern-ecommerce/
 └── README.md
 ```
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
@@ -139,7 +139,7 @@ mern-ecommerce/
 | `POST` | `/api/orders/checkout` | Yes | Place a new order with mock payment |
 | `GET` | `/api/orders/:id` | Yes | Get a specific order |
 
-## 💳 Mock Payment Behavior
+##  Mock Payment Behavior
 
 The checkout intentionally mimics Stripe's test-mode pattern. Card validation rules:
 
@@ -149,7 +149,7 @@ The checkout intentionally mimics Stripe's test-mode pattern. Card validation ru
 
 This makes the demo fully interactive without requiring a real Stripe account or API keys.
 
-## 🗄️ Database Modes
+##  Database Modes
 
 **In-memory mode (default)**: Leave `MONGODB_URI` empty in `.env`. The app uses a built-in in-memory store. Data resets when the server restarts. Perfect for demos.
 
@@ -159,7 +159,7 @@ This makes the demo fully interactive without requiring a real Stripe account or
 
 When using MongoDB, run `npm run seed` from the `server` directory to populate sample products.
 
-## 🛣️ Roadmap
+##  Roadmap
 
 - [ ] Real Stripe integration (test mode)
 - [ ] Admin dashboard for product CRUD
@@ -169,10 +169,10 @@ When using MongoDB, run `npm run seed` from the `server` directory to populate s
 - [ ] Wishlist
 - [ ] Email order confirmations
 
-## 📄 License
+##  License
 
 MIT
 
-## 🙋 About
+##  About
 
 Built by [Anjali Garikapati](https://github.com/Anjaligarikapati) as a portfolio project demonstrating full-stack MERN development.
