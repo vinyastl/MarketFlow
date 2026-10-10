@@ -49,3 +49,10 @@ export const memoryDB = {
   products: new Collection(),
   orders: new Collection(),
 };
+
+// Clears every collection. Used by the test suite to isolate tests.
+export function resetMemoryDB() {
+  for (const collection of Object.values(memoryDB)) {
+    collection.items.clear();
+  }
+}

@@ -1,60 +1,57 @@
-import express from "express";
+import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
+import { JWT_SECRET } from "../config/env.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import { validateLogin, validateSignup } from "../utils/validators.js";
 
-const router = express.Router();
+const router = Router();
 
 function signToken(userId) {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "7d" });
+}
+
+function publicUser(user) {
+  return { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin };
 }
 
 // POST /api/auth/signup
-router.post("/signup", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Name, email, and password are required" });
-    }
+router.post(
+  "/signup",
+  asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body || {};
 
-    const existing = await User.findByEmail(email);
-    if (existing) {
-      return res.status(409).json({ error: "Email already registered" });
-    }
+    const invalid = validateSignup({ name, email, password });
+    if (invalid) return res.status(400).json({ error: invalid });
 
-    const user = await User.create({ name, email, password });
+    const existing = await User.findByEmail(email.trim());
+    if (existing) return res.status(409).json({ error: "Email already registered" });
+
+    const user = await User.create({ name: name.trim(), email: email.trim(), password });
     const token = signToken(user._id);
 
-    res.status(201).json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin },
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    res.status(201).json({ token, user: publicUser(user) });
+  })
+);
 
 // POST /api/auth/login
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    const { email, password } = req.body || {};
 
-    const user = await User.findByEmail(email);
+    const invalid = validateLogin({ email, password });
+    if (invalid) return res.status(400).json({ error: invalid });
+
+    const user = await User.findByEmail(email.trim());
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const ok = await User.comparePassword(user, password);
     if (!ok) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = signToken(user._id);
-    res.json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin },
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    res.json({ token, user: publicUser(user) });
+  })
+);
 
 export default router;

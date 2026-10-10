@@ -1,0 +1,33 @@
+# Render Blueprint for ShopMERN
+# Optional one-click deployment: New -> Blueprint in the Render dashboard.
+# Fill in JWT_SECRET and MONGODB_URI when Render asks for them.
+
+services:
+  - type: web
+    name: shopmern-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: CLIENT_URL
+        value: https://shopmern-client.onrender.com
+
+  - type: web
+    name: shopmern-client
+    runtime: static
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://shopmern-api.onrender.com

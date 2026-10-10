@@ -3,13 +3,20 @@ import api from "../api/client.js";
 
 const AuthContext = createContext(null);
 
+function readUserFromStorage() {
+  try {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(readUserFromStorage);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
     setLoading(false);
   }, []);
 

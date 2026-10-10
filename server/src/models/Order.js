@@ -27,6 +27,21 @@ const orderSchema = new mongoose.Schema(
 
 const MongoOrder = mongoose.model("Order", orderSchema);
 
+// Statuses are stored as simple strings. Only "paid" is produced by the mock
+// checkout; the rest exist so a real fulfilment pipeline can be added later.
+export const ORDER_STATUSES = ["pending", "paid", "processing", "shipped", "delivered"];
+
+export const orderStatusLabel = (status) => {
+  const labels = {
+    pending: "Pending",
+    paid: "Paid",
+    processing: "Processing",
+    shipped: "Shipped",
+    delivered: "Delivered",
+  };
+  return labels[status] || status || "Unknown";
+};
+
 export const Order = {
   async create(data) {
     if (isUsingMemoryDB()) return memoryDB.orders.create(data);
@@ -34,7 +49,10 @@ export const Order = {
   },
 
   async findByUser(userId) {
-    if (isUsingMemoryDB()) return memoryDB.orders.find({ userId });
+    if (isUsingMemoryDB()) {
+      const orders = await memoryDB.orders.find({ userId });
+      return orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
     return MongoOrder.find({ userId }).sort({ createdAt: -1 });
   },
 
